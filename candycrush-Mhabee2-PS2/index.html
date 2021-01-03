@@ -1,0 +1,640 @@
+<!--
+CandyCrush
+Your Name: Mustafa Habeeb
+Collaborators:
+resources: -Proffesor/Ta office hours
+           -Stack overflow for sytax and learning some the commands 
+           https://stackoverflow.com/questions/7532320/one-button-firing-another-buttons-click-event
+           https://stackoverflow.com/questions/2788191/how-to-check-whether-a-button-is-clicked-by-using-javascript
+           https://stackoverflow.com/questions/1947263/using-an-html-button-to-call-a-javascript-function
+           https://www.google.com/search?q=how+do+I+say+if+button+is+clicked+do+this+in+javascript&rlz=1C5CHFA_enUS834US834&oq=how+do+I+say+if+button+is+clicked+do+this+in+javascript+&aqs=chrome..69i57j33i160.10303j0j7&sourceid=chrome&ie=UTF-8
+           https://stackoverflow.com/questions/7174265/reset-textbox-value-in-javascript/7174292
+           https://stackoverflow.com/questions/21577929/how-to-change-color-on-button-when-disabled-then-turn-back-when-enabled
+           -W3Schools
+
+-->
+<!DOCTYPE html>
+<html>
+<!--
+/* Copyright (c) 2017 MIT 6.813/6.831 course staff, all rights reserved.
+ * Redistribution of original or derived work requires permission of course staff.
+ */
+-->
+
+<head>
+<meta charset="utf-8">
+<title>CandyCrush</title>
+
+<!-- Load style sheets -->
+<link rel="stylesheet" href=
+  "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+
+<link rel="stylesheet" href="mainLayout.css">
+
+<!-- Use mobile-aware viewport -->
+<meta name="viewport" content=
+  "width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Load any supplemental Javascript libraries here -->
+<script src=
+  "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src=
+  "https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.2/seedrandom.js">
+</script>
+<script src="candy.js"></script>
+<script src="board.js"></script>
+<script src="rules.js"></script>
+
+<script>
+
+// By default, the first board loaded by your page will be the same 
+// each time you load (which is accomplished by "seeding" the random
+// number generator. This makes testing (and grading!) easier!
+Math.seedrandom(0);
+
+
+// A short jQuery extension to read query parameters from the URL.
+$.extend({
+  getUrlVars: function() {
+    var vars = [], pair;
+    var pairs = window.location.search.substr(1).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+      pair = pairs[i].split('=');
+      vars.push(pair[0]);
+      vars[pair[0]] = pair[1] &&
+          decodeURIComponent(pair[1].replace(/\+/g, ' '));
+    }
+    return vars;
+  },
+  getUrlVar: function(name) {
+    return $.getUrlVars()[name];
+  }
+});
+
+// constants
+var DEFAULT_BOARD_SIZE = 8;
+
+// data model at global scope for easier debugging
+var board;
+var rules;
+
+// initialize board
+if ($.getUrlVar('size') && $.getUrlVar('size') >= 3) {
+  board = new Board($.getUrlVar('size'));
+} else {
+  board = new Board(DEFAULT_BOARD_SIZE);
+}
+
+// load a rule
+rules = new Rules(board);
+
+function newgame(therules, theboard){
+  rules.prepareNewGame();
+     var array = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+     for (j = 0; j < array.length; j++) {
+       for (i = 0; i < 8; i++) {
+         console.log(array[j] + (i + 1));
+         //board.getCandyAt(i,j).color;
+         console.log(board.getCandyAt(i, j).color);
+         document.getElementById(array[j] + (i + 1)).style.background = (board.getCandyAt(i,j).color);
+         //if the color is not yellow make the text white else make the text black. 
+         if (board.getCandyAt(i, j).color == 'yellow') {
+           document.getElementById(array[j] + (i + 1)).style.color = 'grey';
+         }
+         if (board.getCandyAt(i, j).color != 'yellow') {
+           document.getElementById(array[j] + (i + 1)).style.color = 'white';
+         }
+       }
+     }
+
+};
+
+// Final initialization entry point: the Javascript code inside this block
+// runs at the end of start-up when the page has finished loading.
+$(document).ready(function()
+{
+  // rules.prepareNewGame();
+  // var array = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  // for(j = 0; j < array.length; j++){
+  //   for(i = 0; i < 8; i++){
+  //     console.log(array[j] + (i+1));
+  //     //board.getCandyAt(i,j).color;
+  //     console.log(board.getCandyAt(i,j).color);
+  //     document.getElementById(array[j] + (i + 1)).style.background = (board.getCandyAt(i,j).color);
+  //     //if the color is not yellow make the text white else make the text black. 
+  //     if(board.getCandyAt(i,j).color == 'yellow'){
+  //       document.getElementById(array[j] + (i + 1)).style.color = 'grey';
+  //     }
+  //     if (board.getCandyAt(i,j).color != 'yellow') {
+  //       document.getElementById(array[j] + (i + 1)).style.color = 'white';
+  //     }
+  //   }
+  // }
+  //*******************************************WORKS^*********************************************
+
+  //  $('#NewGameButton').click(function () {
+  //    rules.prepareNewGame();
+  //    var array = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  //    for (j = 0; j < array.length; j++) {
+  //      for (i = 0; i < 8; i++) {
+  //        console.log(array[j] + (i + 1));
+  //        //board.getCandyAt(i,j).color;
+  //        console.log(board.getCandyAt(i, j).color);
+  //        document.getElementById(array[j] + (i + 1)).style.background = (board.getCandyAt(i, j).color);
+  //        //if the color is not yellow make the text white else make the text black. 
+  //        if (board.getCandyAt(i, j).color == 'yellow') {
+  //          document.getElementById(array[j] + (i + 1)).style.color = 'grey';
+  //        }
+  //        if (board.getCandyAt(i, j).color != 'yellow') {
+  //          document.getElementById(array[j] + (i + 1)).style.color = 'white';
+  //        }
+  //      }
+  //    }
+  // })
+  //*******************************************50/50^*********************************************
+
+
+ //make fucntion call 
+  newgame(rules, board);
+
+});
+
+
+/* Event Handlers */
+// access the candy object with info.candy
+
+// add a candy to the board
+$(board).on('add', function(e, info)
+{
+  // Your code here.
+  var array = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  var candyr = info.candy.row;
+  var candyc = info.candy.col;
+  document.getElementById(array[candyc] + (candyr + 1)).style.background = (info.candy.color);
+  //if the color is not yellow make the text white else make the text black. 
+  if (info.candy.color == 'yellow') {
+    document.getElementById(array[candyc] + (candyr + 1)).style.color = 'grey';
+  }
+  if (info.candy.color != 'yellow') {
+    document.getElementById(array[candyc] + (candyr + 1)).style.color = 'white';
+  }
+
+});
+
+// move a candy on the board
+$(board).on('move', function(e, info)
+{
+  // Your code here.
+  var array = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  var candyr = info.candy.row;
+  var candyc = info.candy.col;
+  document.getElementById(array[candyc] + (candyr + 1)).style.background = (info.candy.color);
+  //if the color is not yellow make the text white else make the text black. 
+  if (info.candy.color == 'yellow') {
+    document.getElementById(array[candyc] + (candyr + 1)).style.color = 'grey';
+  }
+  if (info.candy.color != 'yellow') {
+    document.getElementById(array[candyc] + (candyr + 1)).style.color = 'white';
+  }
+
+});
+
+// Button Events
+$(document).on('click', "#CrushOnceButton", function (evt) {
+  // Your code here.
+  console.log("Outside if");
+  var crushes = rules.getCandyCrushes();
+  if (crushes.length > 0) {
+    console.log("inside if");
+    var crush_button = document.getElementById("CrushOnceButton");
+    rules.removeCrushes(crushes);
+    crush_button.disabled = true;
+    $('#CrushOnceButton').css("background-color", "lightgray");
+    setTimeout(function () { rules.moveCandiesDown();  }, 1000);
+ 
+  }
+});
+
+// remove a candy from the board
+$(board).on('remove', function(e, info)
+{
+  var array = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  var candyr = info.fromRow;
+  var candyc = info.fromCol;
+  console.log(candyr);
+  var goBlack = document.getElementById(array[candyc] + (candyr + 1));
+  console.log(goBlack);
+  goBlack.style.background = "black";
+
+});
+
+
+// Button Events
+$(document).on('click', "#NewGameButton", function(evt)
+{
+  // Your code here.
+  board.clear();
+  newgame(rules, board);
+$('#NewGameButton').css("background-color", "teal");
+ 
+
+});
+
+//****************************************************************************************************
+function convertletters(a){
+  if(a == 97){
+    b = 0;
+    return b;
+  }
+  else if (a == 98) {
+    b = 1;
+    return b;
+  }
+  else if (a == 99) {
+    b = 2;
+    return b;
+  }
+  else if (a == 100) {
+    b = 3;
+    return b;
+  }
+  else if (a == 101) { //e
+    b = 4;
+    return b;
+  }
+  else if (a == 102) {
+    b = 5;
+    return b;
+  }
+  else if (a == 103) {
+    b = 6;
+    return b;
+  }
+  else if (a == 104) {
+    b = 7;
+    return b;
+  }
+};
+
+function convertNumbers_minus_one(c){
+  if (c == 49) {
+    d = 0;
+      return d;
+  }
+  else if (c == 50) {
+    d = 1;
+    return d;
+  }
+  else if (c == 51) {
+    d = 2;
+    return d;
+  }
+  else if (c == 52) {
+    d = 3;
+    return d;
+  }
+  else if (c == 53) {
+    d = 4;
+    return d;
+  }
+  else if (c == 54) {
+    d = 5;
+    return d;
+  }
+  else if (c == 55) {
+    d = 6;
+    return d;
+  }
+  else if (c == 56) {
+    d = 7;
+    return d;
+  }
+};
+
+
+// keyboard events arrive here
+$(document).on('keyup', function(evt) {
+  // Your code here.
+  //console.log (evt.keyCode);
+  //console.log(document.getElementById("CandyToMove").value);
+  var move = document.getElementById("CandyToMove").value;
+  var inputpos0 = move.charCodeAt(0);
+  var inputpos1 = move.charCodeAt(1);
+  console.log("LOOK HERE:")
+  console.log(inputpos0);
+  console.log(inputpos1);
+
+  // var C = (inputpos0 - 97); // should gfet 101 -97 = 4 
+  // var R = convertNumbers_minus_one(inputpos1);           
+  //var C = convertletters(inputpos0);
+  var R =  convertletters(inputpos0);
+  var C = convertNumbers_minus_one(inputpos1);
+  // console.log(R);
+  // console.log(C);
+ 
+  var THEcandy = board.getCandyAt(C,R);
+  //console.log(THEcandy);
+
+  var up_button = document.getElementById("UpButton");
+  var down_button = document.getElementById("DownButton");
+  var left_button = document.getElementById("LeftButton");
+  var right_button = document.getElementById("RightButton");
+  var crush_button = document.getElementById("CrushOnceButton");
+  
+ 
+  if(inputpos1 != NaN ){
+    if ((inputpos0 >= 97 && inputpos0 <=104) && (inputpos1 >= 49 && inputpos1 <= 56)){
+      console.log(inputpos0, inputpos1);
+      console.log(R,C);
+      console.log(THEcandy);
+
+      if(rules.isMoveTypeValid(THEcandy, "up")){
+        up_button.disabled = false;
+        $('#UpButton').css("background-color", "teal");
+        console.log("UpButton");
+        
+        $('#UpButton').click(function () {
+
+          var flip_dest = board.getCandyInDirection(THEcandy, "up");
+          var flip_up = board.flipCandies(THEcandy, flip_dest);
+          console.log("done flip_up");
+
+          document.getElementById('CandyToMove').value = '';
+          console.log("clear");
+          up_button.disabled = true;
+          $('#UpButton').css("background-color", "lightgray");
+          down_button.disabled = true;
+          left_button.disabled = true;
+          right_button.disabled = true;
+          crush_button.disabled = false;
+          $('#CrushOnceButton').css("background-color", "teal");
+        })
+      }
+      if (rules.isMoveTypeValid(THEcandy, "down")) {
+        down_button.disabled = false;
+        $('#DownButton').css("background-color", "teal");
+        console.log("DownButton");
+        
+        $('#DownButton').click(function () {
+
+          var flip_dest = board.getCandyInDirection(THEcandy, "down");
+          var flip_down = board.flipCandies(THEcandy, flip_dest);
+          console.log("done flip_down");
+
+          document.getElementById('CandyToMove').value = '';
+          console.log("clear");
+          up_button.disabled = true;
+          down_button.disabled = true;
+          $('#DownButton').css("background-color", "lightgray");
+          left_button.disabled = true;
+          right_button.disabled = true;
+          crush_button.disabled = false;
+          $('#CrushOnceButton').css("background-color", "teal");
+        })
+      }
+      if (rules.isMoveTypeValid(THEcandy, "left")) {
+        left_button.disabled = false;
+        $('#LeftButton').css("background-color", "teal");
+        console.log("LeftButton");
+       
+        $('#LeftButton').click(function () {
+
+          var flip_dest = board.getCandyInDirection(THEcandy, "left");
+          var flip_left = board.flipCandies(THEcandy, flip_dest);
+          console.log("done flip_left");
+
+
+          document.getElementById('CandyToMove').value = '';
+          console.log("clear");
+          up_button.disabled = true;
+          down_button.disabled = true;
+          left_button.disabled = true;
+          $('#LeftButton').css("background-color", "lightgray");
+          right_button.disabled = true;
+          crush_button.disabled = false;
+          $('#CrushOnceButton').css("background-color", "teal");
+        })
+        
+      }
+      if (rules.isMoveTypeValid(THEcandy, "right")) {
+        right_button.disabled = false;
+        $('#RightButton').css("background-color", "teal");
+        console.log("RightButton");
+        
+        $('#RightButton').click(function () {
+
+          var flip_dest = board.getCandyInDirection(THEcandy, "right");
+          var flip_right = board.flipCandies(THEcandy, flip_dest);
+          console.log("done flip_right");
+
+          document.getElementById('CandyToMove').value = '';
+          console.log("clear");
+          up_button.disabled = true;
+          down_button.disabled = true;
+          left_button.disabled = true;
+          right_button.disabled = true;
+          $('#RightButton').css("background-color", "lightgray");
+          crush_button.disabled = false;
+          $('#CrushOnceButton').css("background-color", "teal");
+        })
+      }
+    }
+    else{
+
+      up_button.disabled = true;
+      $('#UpButton').css("background-color", "lightgray");
+      down_button.disabled = true; 
+      $('#DownButton').css("background-color", "lightgray");
+      left_button.disabled = true; 
+      $('#LefttButton').css("background-color", "lightgray");
+      right_button.disabled = true;
+      $('#RightButton').css("background-color", "lightgray");
+    }
+  }
+
+});
+
+// Button Events -UPkey 
+$(document).on('click', "#UpButton", function(evt)
+{
+  // Your code here.
+  console.log("UpButton is pressed");
+  // document.getElementById('CandyToMove').value = '';
+
+ 
+});
+
+// Button Events - DOWNkey
+$(document).on('click', "#DownButton", function(evt)
+{
+  // Your code here.
+  console.log("DownButton is pressed");
+  // document.getElementById('CandyToMove').value = '';
+ 
+});
+
+// Button Events - LEFTkey
+$(document).on('click', "#LeftButton", function(evt)
+{
+  // Your code here.
+  console.log("LeftButton is pressed");
+  // document.getElementById('CandyToMove').value = '';
+ 
+});
+
+// Button Events - RIGHTkey
+$(document).on('click', "#RightButton", function(evt)
+{
+  // Your code here.
+  console.log("RightButton is pressed");
+  // document.getElementById('CandyToMove').value = '';
+ 
+});
+//****************************************************************************************************
+
+
+</script>
+
+
+</head>
+
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4" id="firstColumn">
+      <div>
+      <!-- Column 1 Code Here -->
+      <!--https://www.quackit.com/css/external_style_sheets.cfm-->
+        <p 
+          id="title">Candy</br>Crush
+        </p>
+        <!-- <button 
+          id=NewGameButton type="button"> New Game
+        </button> -->
+        <input type="button" class="btn btn-default" id="NewGameButton" value="New Game">
+
+      </div>
+  </div> <!-- END OF FIRST COLUMN-->
+
+    <div class="col-md-4" id="mainColumn">
+
+      <!-- Column 2 Code Here -->
+      <!-- Column 2 -->
+      <table>
+        <tr>
+          <td id="a1">a1</td>
+          <td id="b1">b1</td>
+          <td id="c1">c1</td>
+          <td id="d1">d1</td>
+          <td id="e1">e1</td>
+          <td id="f1">f1</td>
+          <td id="g1">g1</td>
+          <td id="h1">h1</td>
+        </tr>
+        <tr>
+          <td id="a2">a2</td>
+          <td id="b2">b2</td>
+          <td id="c2">c2</td>
+          <td id="d2">d2</td>
+          <td id="e2">e2</td>
+          <td id="f2">f2</td>
+          <td id="g2">g2</td>
+          <td id="h2">h2</td>
+        </tr>
+        <tr>
+          <td id="a3">a3</td>
+          <td id="b3">b3</td>
+          <td id="c3">c3</td>
+          <td id="d3">d3</td>
+          <td id="e3">e3</td>
+          <td id="f3">f3</td>
+          <td id="g3">g3</td>
+          <td id="h3">h3</td>
+        </tr>
+        <tr>
+          <td id="a4">a4</td>
+          <td id="b4">b4</td>
+          <td id="c4">c4</td>
+          <td id="d4">d4</td>
+          <td id="e4">e4</td>
+          <td id="f4">f4</td>
+          <td id="g4">g4</td>
+          <td id="h4">h4</td>
+        </tr>
+        <tr>
+          <td id="a5">a5</td>
+          <td id="b5">b5</td>
+          <td id="c5">c5</td>
+          <td id="d5">d5</td>
+          <td id="e5">e5</td>
+          <td id="f5">f5</td>
+          <td id="g5">g5</td>
+          <td id="h5">h5</td>
+        </tr>
+        <tr>
+          <td id="a6">a6</td>
+          <td id="b6">b6</td>
+          <td id="c6">c6</td>
+          <td id="d6">d6</td>
+          <td id="e6">e6</td>
+          <td id="f6">f6</td>
+          <td id="g6">g6</td>
+          <td id="h6">h6</td>
+        </tr>
+        <tr>
+          <td id="a7">a7</td>
+          <td id="b7">b7</td>
+          <td id="c7">c7</td>
+          <td id="d7">d7</td>
+          <td id="e7">e7</td>
+          <td id="f7">f7</td>
+          <td id="g7">g7</td>
+          <td id="h7">h7</td>
+        </tr>
+        <tr>
+          <td id="a8">a8</td>
+          <td id="b8">b8</td>
+          <td id="c8">c8</td>
+          <td id="d8">d8</td>
+          <td id="e8">e8</td>
+          <td id="f8">f8</td>
+          <td id="g8">g8</td>
+          <td id="h8">h8</td>
+        </tr>
+      </table>
+      
+    </div><!-- END OF MAIN COLUMN-->
+
+    <div class="col-md-4" id="lastColumn">
+
+      <!-- Column 3 Code Here -->
+      <!-- Column 3 -->
+
+      <p 
+        id="MoveText"> Move:
+      </p>
+      <input type="text" class="form-control" id="CandyToMove">
+      <!-- <button 
+        id=CrushOnceButton type="button"> Crush Once
+      </button> -->
+      <input type="button" class="btn btn-default" id="CrushOnceButton" value="Crush Once" disabled = true>
+      
+      <input type="button" class="arrow btn btn-default" id="UpButton" value="↑" disabled = true>
+      <input type="button" class="arrow btn btn-default" id="DownButton" value="↓" disabled = true>
+      <input type="button" class="arrow btn btn-default" id="LeftButton" value="←" disabled = true>
+      <input type="button" class="arrow btn btn-default" id="RightButton" value="→" disabled = true>
+
+    </div><!-- END OF LAST COLUMN-->
+
+
+
+
+
+
+  </div> <!-- class="row" -->
+</div> <!-- class="container" -->
+
+</body>
+
+</html>
